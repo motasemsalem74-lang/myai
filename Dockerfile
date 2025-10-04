@@ -29,12 +29,20 @@ COPY backend/ .
 # إنشاء المجلدات المطلوبة
 RUN mkdir -p /tmp/voice_models /tmp/temp_audio /tmp/transformers /tmp/whisper /tmp/logs
 
-# تنظيف الـ cache وملفات غير ضرورية لتقليل حجم الـ image
+# متغيرات بيئة لتقليل حجم التحميلات
+ENV TRANSFORMERS_CACHE=/tmp/transformers
+ENV COQUI_TTS_CACHE=/tmp/tts_cache
+ENV WHISPER_CACHE=/tmp/whisper
+
+# تنظيف aggressive لتوفير مساحة
 RUN rm -rf /root/.cache/pip \
     && find /usr/local/lib/python3.11 -type d -name "tests" -exec rm -rf {} + 2>/dev/null || true \
     && find /usr/local/lib/python3.11 -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true \
     && find /usr/local/lib/python3.11 -name "*.pyc" -delete \
-    && find /usr/local/lib/python3.11 -name "*.pyo" -delete
+    && find /usr/local/lib/python3.11 -name "*.pyo" -delete \
+    && find /usr/local/lib/python3.11 -type f -name "*.exe" -delete 2>/dev/null || true \
+    && find /usr/local/lib/python3.11 -type d -name "locale" -exec rm -rf {}/[a-z][a-z]_[A-Z][A-Z] \; 2>/dev/null || true \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Port
 EXPOSE 8000

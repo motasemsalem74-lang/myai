@@ -1,0 +1,68 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.pyc
+*.pyo
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# Environment
+.env
+.env.*
+*.env
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+docs/
+
+# Tests
+tests/
+test/
+*_test.py
+test_*.py
+
+# Temporary
+temp/
+tmp/
+*.tmp
+temp_audio/
+voice_models/
+
+# Models cache (سيتم تحميلها runtime)
+models/
+*.pt
+*.pth
+*.ckpt
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Railway
+.railway/
+
+# Mobile app (مش محتاجينها في الـ backend image)
+mobile_app/
+
+# Frontend (لو موجود)
+frontend/
