@@ -1,6 +1,9 @@
 """
 Router لتدريب الصوت
 Voice Training API Endpoints
+
+ملاحظة: Edge TTS لا يدعم voice cloning
+هذا الـ endpoint للتوافق فقط - يمكن إضافة خدمات أخرى لاحقاً
 """
 
 from fastapi import APIRouter, HTTPException, UploadFile, File
@@ -8,73 +11,53 @@ from typing import List
 import logging
 
 from app.models.schemas import VoiceTrainingRequest, VoiceTrainingStatus
-from app.services.tts_service import TTSService
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
-tts_service = TTSService()
+
+# ملاحظة: Edge TTS لا يحتاج training
+# الأصوات جاهزة ومجانية من Microsoft
 
 # تخزين حالة التدريب
 training_status = {}
 
 @router.post("/train")
 async def train_voice(request: VoiceTrainingRequest):
-    """بدء تدريب نموذج الصوت"""
+    """
+    بدء تدريب نموذج الصوت
+    
+    ملاحظة: حالياً نستخدم Edge TTS الذي لا يحتاج training
+    الأصوات جاهزة ومجانية (سلمى وشاكر)
+    """
     
     try:
-        logger.info(f"🎓 Starting voice training for user: {request.user_id}")
+        logger.info(f"ℹ️ Voice training requested for user: {request.user_id}")
+        logger.info(f"ℹ️ Edge TTS is being used - no training needed")
         
-        # تحديث الحالة
+        # إرجاع رسالة توضيحية
         training_status[request.user_id] = {
-            "status": "processing",
-            "progress": 0,
-            "message": "جاري معالجة العينات الصوتية..."
+            "status": "not_needed",
+            "progress": 100,
+            "message": "Edge TTS يستخدم أصوات جاهزة (سلمى وشاكر) - لا حاجة للتدريب"
         }
         
-        # بدء التدريب
-        async def update_progress(progress: int, status: str = "processing"):
-            training_status[request.user_id] = {
-                "status": status,
-                "progress": progress,
-                "message": f"التقدم: {progress}%"
+        return {
+            "success": True,
+            "message": "Voice training not needed with Edge TTS. Using pre-built Egyptian voices (Salma & Shakir).",
+            "model_id": "ar-EG-SalmaNeural",
+            "quality_score": 0.95,
+            "info": {
+                "available_voices": [
+                    {"name": "Salma", "gender": "female", "voice_id": "ar-EG-SalmaNeural"},
+                    {"name": "Shakir", "gender": "male", "voice_id": "ar-EG-ShakirNeural"}
+                ],
+                "note": "أصوات طبيعية جداً ومجانية من Microsoft"
             }
-        
-        result = await tts_service.train_voice_model(
-            request.user_id,
-            request.audio_samples,
-            callback=update_progress
-        )
-        
-        if result["success"]:
-            training_status[request.user_id] = {
-                "status": "completed",
-                "progress": 100,
-                "message": "تم التدريب بنجاح!",
-                "model_id": result["model_id"]
-            }
-            
-            return {
-                "success": True,
-                "message": "Voice model trained successfully",
-                "model_id": result["model_id"],
-                "quality_score": result.get("quality_score", 0.85)
-            }
-        else:
-            training_status[request.user_id] = {
-                "status": "failed",
-                "progress": 0,
-                "message": "فشل التدريب"
-            }
-            raise HTTPException(status_code=500, detail=result.get("error", "Training failed"))
+        }
             
     except Exception as e:
-        logger.error(f"Error training voice: {e}")
-        training_status[request.user_id] = {
-            "status": "failed",
-            "progress": 0,
-            "message": str(e)
-        }
+        logger.error(f"Error in voice training endpoint: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/status/{user_id}", response_model=VoiceTrainingStatus)

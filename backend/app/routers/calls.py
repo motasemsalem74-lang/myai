@@ -12,8 +12,8 @@ import random
 
 from app.models.schemas import CallRequest, CallResponse, EmotionType
 from app.services.ai_service import AIService
-from app.services.tts_service import TTSService
-from app.services.stt_service import STTService
+from app.services.edge_tts_service import EdgeTTSService
+from app.services.speech_service import SpeechService
 from app.services.database import DatabaseService
 from app.services.summary_service import SummaryService
 from app.models.schemas import ConversationContext
@@ -22,10 +22,10 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
-# تهيئة الخدمات
+# تهيئة الخدمات الجديدة (Groq + Edge TTS)
 ai_service = AIService()
-tts_service = TTSService()
-stt_service = STTService()
+tts_service = EdgeTTSService()  # Edge TTS - مجاني وطبيعي!
+stt_service = SpeechService()   # Groq Whisper - مجاني وسريع!
 db_service = DatabaseService()
 summary_service = SummaryService()
 
