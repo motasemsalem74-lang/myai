@@ -10,7 +10,8 @@ pydantic-settings==2.1.0
 openai==1.3.7
 anthropic==0.7.7
 httpx==0.24.1
-# openai-whisper==20231117  # سنستخدم OpenAI Whisper API بدلاً من local!
+groq==0.4.1  # Whisper مجاني وسريع جداً!
+# openai-whisper==20231117  # سنستخدم Groq Whisper API (مجاني!)
 # torch==2.1.1+cpu  # مش محتاجينه بدون local whisper/TTS
 # torchaudio==2.1.1+cpu
 
