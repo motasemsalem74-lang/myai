@@ -24,9 +24,6 @@ COPY backend/ .
 # إنشاء المجلدات المطلوبة
 RUN mkdir -p /tmp/voice_models /tmp/temp_audio /tmp/transformers /tmp/whisper /tmp/logs
 
-# إعطاء صلاحيات تنفيذ للـ start script
-RUN chmod +x start.sh
-
 # متغيرات بيئة لتقليل حجم التحميلات
 ENV TRANSFORMERS_CACHE=/tmp/transformers
 ENV COQUI_TTS_CACHE=/tmp/tts_cache
@@ -41,5 +38,5 @@ RUN find /usr/local/lib/python3.11 -type d -name "tests" -exec rm -rf {} + 2>/de
 # Port (Railway يحدده تلقائياً)
 EXPOSE 8000
 
-# Command للتشغيل (استخدام start script)
-CMD ["./start.sh"]
+# Command للتشغيل (استخدام Python start script)
+CMD ["python3", "start.py"]
