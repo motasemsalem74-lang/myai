@@ -10,15 +10,15 @@ pydantic-settings==2.1.0
 openai==1.3.7
 anthropic==0.7.7
 httpx==0.24.1
-openai-whisper==20231117
-torch==2.1.1+cpu
-torchaudio==2.1.1+cpu
+# openai-whisper==20231117  # سنستخدم OpenAI Whisper API بدلاً من local!
+# torch==2.1.1+cpu  # مش محتاجينه بدون local whisper/TTS
+# torchaudio==2.1.1+cpu
 
-# TTS (Text-to-Speech)
-TTS==0.21.3
+# TTS (Text-to-Speech) - استخدام Google TTS بدلاً من Coqui (أخف بكتير!)
+gTTS==2.4.0
 pydub==0.25.1
 soundfile==0.12.1
-librosa==0.10.1
+# librosa==0.10.1  # ثقيل! نستخدمه runtime لو احتجناه
 
 # Database
 supabase==2.3.0
