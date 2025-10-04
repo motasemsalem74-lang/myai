@@ -83,8 +83,8 @@ mobile_app/ios/Flutter/Flutter.podspec
 # Railway
 .railway/
 
-# Models cache
-models/
+# Models cache (ML models فقط، مش app/models/)
 *.pt
 *.pth
 *.ckpt
+voice_models/
