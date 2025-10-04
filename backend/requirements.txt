@@ -39,10 +39,10 @@ webrtcvad==2.0.10
 cryptography==41.0.7
 bcrypt==4.1.2
 
-# Sentiment Analysis
-transformers==4.36.2
-sentencepiece==0.1.99
+# Sentiment Analysis (سنستخدم OpenRouter بدلاً من local transformers لتوفير المساحة)
+# transformers==4.36.2  # ~2GB! نستخدم OpenRouter API
+# sentencepiece==0.1.99
 
-# Testing (optional)
-pytest==7.4.3
-pytest-asyncio==0.21.1
+# Testing (optional - مش محتاجينها في production)
+# pytest==7.4.3
+# pytest-asyncio==0.21.1
