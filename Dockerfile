@@ -28,6 +28,5 @@ ENV TEMP_AUDIO_DIR=/tmp/temp_audio
 # Port
 EXPOSE 8000
 
-# Start command - استخدام sh -c للتعامل مع $PORT بشكل صحيح
-ENTRYPOINT ["sh", "-c"]
-CMD ["uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+# Start command - تشغيل الـ main.py مباشرة (يقرا PORT من environment)
+CMD ["python", "-m", "app.main"]

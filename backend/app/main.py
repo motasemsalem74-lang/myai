@@ -148,10 +148,15 @@ async def global_exception_handler(request, exc):
 if __name__ == "__main__":
     import uvicorn
     
+    # قراءة PORT من environment variable (Railway)
+    port = int(os.getenv("PORT", 8000))
+    
+    logger.info(f"🚀 Starting server on port {port}")
+    
     uvicorn.run(
         "app.main:app",
         host="0.0.0.0",
-        port=8000,
-        reload=True,
+        port=port,
+        reload=False,  # في production
         log_level="info"
     )
