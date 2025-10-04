@@ -1,5 +1,5 @@
-# استخدام Python 3.10 official image
-FROM python:3.10-slim
+# استخدام Python 3.11 official image (TTS numpy requirement is flexible for Python > 3.10)
+FROM python:3.11-slim
 
 # تثبيت dependencies النظام
 RUN apt-get update && apt-get install -y \
