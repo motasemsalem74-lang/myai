@@ -14,8 +14,8 @@ httpx==0.24.1
 # torch==2.1.1+cpu  # مش محتاجينه بدون local whisper/TTS
 # torchaudio==2.1.1+cpu
 
-# TTS (Text-to-Speech) - استخدام Google TTS بدلاً من Coqui (أخف بكتير!)
-gTTS==2.4.0
+# TTS (Text-to-Speech) - Edge TTS من Microsoft (مجاني وطبيعي جداً!)
+edge-tts==6.1.9
 pydub==0.25.1
 soundfile==0.12.1
 # librosa==0.10.1  # ثقيل! نستخدمه runtime لو احتجناه
