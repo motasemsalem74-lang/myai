@@ -1,9 +1,9 @@
 [phases.setup]
-nixPkgs = ['python310', 'ffmpeg', 'gcc']
+nixPkgs = ['python310', 'python310Packages.pip', 'python310Packages.virtualenv', 'ffmpeg', 'gcc']
 
 [phases.install]
 cmds = [
-  'python3 -m pip install --upgrade pip',
+  'python3 -m pip install --upgrade pip setuptools wheel',
   'python3 -m pip install -r backend/requirements.txt'
 ]
 
