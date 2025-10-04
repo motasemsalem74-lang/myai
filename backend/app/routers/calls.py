@@ -45,10 +45,13 @@ async def handle_incoming_call(
     """
     
     try:
+        # Initialize services
+        ai, tts, stt, db, summary = get_services()
+        
         logger.info(f"📞 Incoming call from: {request.caller_phone}")
         
         # الحصول على إعدادات المستخدم
-        user_settings = await db_service.get_user_settings(request.user_id)
+        user_settings = await db.get_user_settings(request.user_id)
         
         # التحقق من أن الرد التلقائي مفعل
         if not user_settings.get("auto_answer_enabled", True):
@@ -62,7 +65,7 @@ async def handle_incoming_call(
         
         # 1. تحويل الصوت إلى نص
         if request.audio_data:
-            stt_result = await stt_service.speech_to_text(
+            stt_result = await stt.speech_to_text(
                 request.audio_data,
                 language="ar",
                 user_id=request.user_id
@@ -77,7 +80,7 @@ async def handle_incoming_call(
             caller_text = "مرحباً"  # رسالة افتراضية
         
         # 2. الحصول على السياق
-        conversation_history = await db_service.get_conversation_history(
+        conversation_history = await db.get_conversation_history(
             request.user_id,
             request.caller_phone,
             limit=10
@@ -94,7 +97,7 @@ async def handle_incoming_call(
         )
         
         # 3. توليد الرد الذكي
-        ai_response = await ai_service.analyze_and_respond(
+        ai_response = await ai.analyze_and_respond(
             caller_text,
             context,
             user_personality={
@@ -114,12 +117,11 @@ async def handle_incoming_call(
         )
         
         # 5. تحويل الرد إلى صوت
-        tts_result = await tts_service.text_to_speech(
+        tts_result = await tts.text_to_speech(
             text=ai_response.text,
             user_id=request.user_id,
             emotion=ai_response.emotion,
             speed=user_settings.get("voice_speed", 1.0),
-            pitch=user_settings.get("voice_pitch", 1.0),
             add_thinking_sounds=use_thinking
         )
         

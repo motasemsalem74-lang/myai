@@ -99,15 +99,25 @@ async def root():
 @app.get("/health")
 async def health_check():
     """فحص صحة الخادم"""
+    
+    # التحقق من Environment Variables
+    env_status = {
+        "GROQ_API_KEY": "✅ Set" if os.getenv("GROQ_API_KEY") else "❌ Missing",
+        "OPENROUTER_API_KEY": "✅ Set" if os.getenv("OPENROUTER_API_KEY") else "❌ Missing",
+        "PORT": os.getenv("PORT", "Not set"),
+        "TEMP_AUDIO_DIR": os.getenv("TEMP_AUDIO_DIR", "Not set")
+    }
+    
     return {
         "status": "healthy",
         "timestamp": datetime.now().isoformat(),
+        "environment": env_status,
         "services": {
             "api": "operational",
             "database": "operational",
-            "ai": "operational",
+            "ai": "operational" if os.getenv("OPENROUTER_API_KEY") else "needs_api_key",
             "tts": "operational",
-            "stt": "operational"
+            "stt": "operational" if os.getenv("GROQ_API_KEY") else "needs_api_key"
         }
     }
 
