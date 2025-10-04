@@ -1,0 +1,16 @@
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.env
+.venv
+venv/
+temp_audio/
+voice_models/
+logs/
+.git
+.gitignore
+README.md
+.vscode/
+.idea/
