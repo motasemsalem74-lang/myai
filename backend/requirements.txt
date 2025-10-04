@@ -34,7 +34,7 @@ jinja2==3.1.2
 # Audio Processing
 numpy>=1.22.0,<1.27.0
 scipy>=1.11.2
-webrtcvad==2.0.10
+# webrtcvad==2.0.10  # يحتاج gcc للبناء - غير ضروري مع Groq API
 
 # Encryption & Security
 cryptography==41.0.7
