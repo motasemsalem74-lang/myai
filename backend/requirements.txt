@@ -31,8 +31,8 @@ aiofiles==23.2.1
 jinja2==3.1.2
 
 # Audio Processing
-numpy==1.26.2
-scipy==1.11.4
+numpy==1.22.0
+scipy==1.9.3
 webrtcvad==2.0.10
 
 # Encryption & Security
