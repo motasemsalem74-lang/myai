@@ -35,8 +35,8 @@ RUN find /usr/local/lib/python3.11 -type d -name "tests" -exec rm -rf {} + 2>/de
     find /usr/local/lib/python3.11 -name "*.pyc" -delete && \
     find /usr/local/lib/python3.11 -name "*.pyo" -delete
 
-# Port
-EXPOSE 8000
+# Port (Railway يحدده تلقائياً)
+EXPOSE ${PORT:-8000}
 
-# Command للتشغيل
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Command للتشغيل (استخدام shell form للـ environment variables)
+CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}
