@@ -3,9 +3,9 @@ nixPkgs = ['python310', 'ffmpeg', 'gcc']
 
 [phases.install]
 cmds = [
-  'pip install --upgrade pip',
-  'pip install -r backend/requirements.txt'
+  'python3 -m pip install --upgrade pip',
+  'python3 -m pip install -r backend/requirements.txt'
 ]
 
 [start]
-cmd = 'cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT'
+cmd = 'cd backend && python3 -m uvicorn app.main:app --host 0.0.0.0 --port $PORT'
