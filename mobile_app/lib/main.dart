@@ -2,126 +2,54 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 import 'screens/home_screen.dart';
-import 'screens/calls_screen.dart';
-import 'screens/reports_screen.dart';
-import 'screens/settings_screen.dart';
-import 'providers/assistant_provider.dart';
-import 'providers/calls_provider.dart';
-import 'providers/settings_provider.dart';
-import 'services/api_service.dart';
+import 'screens/call_summaries_screen.dart';
+import 'services/api_key_manager.dart';
+import 'services/database_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // تهيئة Hive
-  await Hive.initFlutter();
+  // تهيئة قاعدة البيانات
+  final db = DatabaseService();
+  await db.init();
   
-  // تهيئة الخدمات
-  await ApiService.initialize();
+  // تهيئة مدير API Keys
+  final apiKeyManager = APIKeyManager();
+  await apiKeyManager.loadKeys();
   
   // إعداد التطبيق
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
   
-  runApp(const MyApp());
+  runApp(MyApp(apiKeyManager: apiKeyManager));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final APIKeyManager apiKeyManager;
+  
+  const MyApp({super.key, required this.apiKeyManager});
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AssistantProvider()),
-        ChangeNotifierProvider(create: (_) => CallsProvider()),
-        ChangeNotifierProvider(create: (_) => SettingsProvider()),
-      ],
+    return Provider<APIKeyManager>.value(
+      value: apiKeyManager,
       child: MaterialApp(
-        title: 'المساعد الشخصي الذكي',
+        title: '🤖 Smart Assistant',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF6C63FF),
+            seedColor: Colors.blue,
             brightness: Brightness.light,
           ),
           textTheme: GoogleFonts.cairoTextTheme(),
-          appBarTheme: const AppBarTheme(
-            centerTitle: true,
-            elevation: 0,
-          ),
         ),
-        darkTheme: ThemeData(
-          useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF6C63FF),
-            brightness: Brightness.dark,
-          ),
-          textTheme: GoogleFonts.cairoTextTheme(ThemeData.dark().textTheme),
-        ),
-        themeMode: ThemeMode.system,
-        home: const MainScreen(),
+        home: HomeScreen(),
       ),
     );
   }
 }
 
-class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
-
-  @override
-  State<MainScreen> createState() => _MainScreenState();
-}
-
-class _MainScreenState extends State<MainScreen> {
-  int _currentIndex = 0;
-  
-  final List<Widget> _screens = [
-    const HomeScreen(),
-    const CallsScreen(),
-    const ReportsScreen(),
-    const SettingsScreen(),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: _screens[_currentIndex],
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
-            label: 'الرئيسية',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.call_outlined),
-            selectedIcon: Icon(Icons.call),
-            label: 'المكالمات',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.analytics_outlined),
-            selectedIcon: Icon(Icons.analytics),
-            label: 'التقارير',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.settings_outlined),
-            selectedIcon: Icon(Icons.settings),
-            label: 'الإعدادات',
-          ),
-        ],
-      ),
-    );
-  }
-}
